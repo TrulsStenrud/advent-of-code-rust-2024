@@ -8,6 +8,16 @@ advent_of_code::solution!(1);
 
 //     return Some(min_value);
 // }
+//
+fn count_occurrances(lsit: &Vec<i32>, value: &i32) -> i32 {
+    let mut count = 0;
+    for n in lsit {
+        if n == value {
+            count += 1;
+        }
+    }
+    return count;
+}
 
 pub fn part_one(input: &str) -> Option<u32> {
     let mut lefts: Vec<i32> = vec![];
@@ -42,11 +52,15 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut rights: Vec<i32> = vec![];
 
     input.lines().for_each(|line| {
-        let thing = line.split_whitespace().collect::<Vec<&str>>();
-        let left = thing[0]
+        let mut numbers = line.split_whitespace();
+        let left = numbers
+            .next()
+            .expect("Not enough numbers in line.")
             .parse::<i32>()
             .expect("Failed to parse i32 from string.");
-        let right = thing[1]
+        let right = numbers
+            .next()
+            .expect("Not enough numbers in line.")
             .parse::<i32>()
             .expect("Failed to parse i32 from string.");
         lefts.push(left);
@@ -56,9 +70,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut sum = 0;
     for n in 0..lefts.len() {
         let curr = lefts[n];
-        let count = rights
-            .iter()
-            .fold(0, |count, n| if n == &curr { count + 1 } else { count });
+        let count = count_occurrances(&rights, &curr);
         sum += count * curr
     }
 
