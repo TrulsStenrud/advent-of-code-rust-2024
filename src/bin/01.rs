@@ -1,14 +1,5 @@
 advent_of_code::solution!(1);
 
-// fn take_smalles(list: &Vec<i32>) -> Option<i32> {
-//     if list.len() == 0 {
-//         return None;
-//     }
-//     let min_value = *list.iter().min().unwrap();
-
-//     return Some(min_value);
-// }
-//
 fn count_occurrances(lsit: &Vec<u32>, value: &u32) -> u32 {
     let mut count = 0;
     for n in lsit {
@@ -19,7 +10,7 @@ fn count_occurrances(lsit: &Vec<u32>, value: &u32) -> u32 {
     return count;
 }
 
-pub fn part_one(input: &str) -> Option<u32> {
+fn collect_rows(input: &str) -> (Vec<u32>, Vec<u32>) {
     let mut lefts: Vec<u32> = vec![];
     let mut rights: Vec<u32> = vec![];
 
@@ -38,6 +29,12 @@ pub fn part_one(input: &str) -> Option<u32> {
         lefts.push(left);
         rights.push(right);
     });
+
+    (lefts, rights)
+}
+
+pub fn part_one(input: &str) -> Option<u32> {
+    let (mut lefts, mut rights) = collect_rows(input);
 
     lefts.sort();
     rights.sort();
@@ -52,24 +49,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let mut lefts: Vec<u32> = vec![];
-    let mut rights: Vec<u32> = vec![];
-
-    input.lines().for_each(|line| {
-        let mut numbers = line.split_whitespace();
-        let left = numbers
-            .next()
-            .expect("Not enough numbers in line.")
-            .parse::<u32>()
-            .expect("Failed to parse u32 from string.");
-        let right = numbers
-            .next()
-            .expect("Not enough numbers in line.")
-            .parse::<u32>()
-            .expect("Failed to parse u32 from string.");
-        lefts.push(left);
-        rights.push(right);
-    });
+    let (lefts, rights) = collect_rows(input);
 
     Some(
         lefts
