@@ -9,7 +9,7 @@ advent_of_code::solution!(1);
 //     return Some(min_value);
 // }
 //
-fn count_occurrances(lsit: &Vec<i32>, value: &i32) -> i32 {
+fn count_occurrances(lsit: &Vec<u32>, value: &u32) -> u32 {
     let mut count = 0;
     for n in lsit {
         if n == value {
@@ -20,17 +20,21 @@ fn count_occurrances(lsit: &Vec<i32>, value: &i32) -> i32 {
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut lefts: Vec<i32> = vec![];
-    let mut rights: Vec<i32> = vec![];
+    let mut lefts: Vec<u32> = vec![];
+    let mut rights: Vec<u32> = vec![];
 
     input.lines().for_each(|line| {
-        let thing = line.split_whitespace().collect::<Vec<&str>>();
-        let left = thing[0]
-            .parse::<i32>()
-            .expect("Failed to parse i32 from string.");
-        let right = thing[1]
-            .parse::<i32>()
-            .expect("Failed to parse i32 from string.");
+        let mut numbers = line.split_whitespace();
+        let left = numbers
+            .next()
+            .expect("Not enough numbers in line.")
+            .parse::<u32>()
+            .expect("Failed to parse u32 from string.");
+        let right = numbers
+            .next()
+            .expect("Not enough numbers in line.")
+            .parse::<u32>()
+            .expect("Failed to parse u32 from string.");
         lefts.push(left);
         rights.push(right);
     });
@@ -38,43 +42,41 @@ pub fn part_one(input: &str) -> Option<u32> {
     lefts.sort();
     rights.sort();
 
-    let mut distance = 0;
-
-    for n in 0..lefts.len() {
-        distance += (lefts[n] - rights[n]).abs() as u32;
-    }
-
-    Some(distance)
+    Some(
+        lefts
+            .iter()
+            .zip(rights.iter())
+            .map(|(left, right)| left.abs_diff(*right))
+            .sum(),
+    )
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let mut lefts: Vec<i32> = vec![];
-    let mut rights: Vec<i32> = vec![];
+    let mut lefts: Vec<u32> = vec![];
+    let mut rights: Vec<u32> = vec![];
 
     input.lines().for_each(|line| {
         let mut numbers = line.split_whitespace();
         let left = numbers
             .next()
             .expect("Not enough numbers in line.")
-            .parse::<i32>()
-            .expect("Failed to parse i32 from string.");
+            .parse::<u32>()
+            .expect("Failed to parse u32 from string.");
         let right = numbers
             .next()
             .expect("Not enough numbers in line.")
-            .parse::<i32>()
-            .expect("Failed to parse i32 from string.");
+            .parse::<u32>()
+            .expect("Failed to parse u32 from string.");
         lefts.push(left);
         rights.push(right);
     });
 
-    let mut sum = 0;
-    for n in 0..lefts.len() {
-        let curr = lefts[n];
-        let count = count_occurrances(&rights, &curr);
-        sum += count * curr
-    }
-
-    Some(sum as u32)
+    Some(
+        lefts
+            .iter()
+            .map(|curr| curr * count_occurrances(&rights, &curr))
+            .sum(),
+    )
 }
 
 #[cfg(test)]
