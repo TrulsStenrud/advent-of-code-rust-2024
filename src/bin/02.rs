@@ -19,10 +19,7 @@ fn is_safe(line: &str) -> bool {
         return false;
     }
     prev = second;
-    for curr in numbers {
-        let next = curr
-            .parse::<u32>()
-            .expect("Failed to parse u32 from string.");
+    for next in numbers.map(|it| it.parse::<u32>().expect("Failed to parse u32 from string.")) {
         // println!("{} {} {}", next, prev, prev == next);
         if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
             // println!("{} was false", line);
@@ -34,17 +31,27 @@ fn is_safe(line: &str) -> bool {
     true
 }
 
-fn is_safe_n(numbers: &Vec<u32>) -> bool {
-    let mut prev = numbers[0];
-
-    let second = numbers[1];
-
+fn is_safe_n(numbers: &Vec<u32>, skip_i: usize) -> bool {
+    let mut index = 0;
+    if skip_i == index {
+        index += 1;
+    }
+    let mut prev = numbers[index];
+    index += 1;
+    if skip_i == index {
+        index += 1;
+    }
+    let second = numbers[index];
+    index += 1;
     let increasing = prev < second;
     if prev == second || prev.abs_diff(second) > 3 {
         return false;
     }
     prev = second;
-    for c in 2..numbers.len() {
+    for (c, index) in (index..numbers.len()).enumerate() {
+        if index == skip_i {
+            continue;
+        }
         let next = numbers[c];
         // println!("{} {} {}", next, prev, prev == next);
         if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
@@ -104,9 +111,7 @@ fn are_you_sure(line: &str) -> bool {
         .collect::<Vec<_>>();
 
     for i in 0..numbers.len() {
-        let mut new_numbers = numbers.clone();
-        new_numbers.remove(i);
-        if is_safe_n(&new_numbers) {
+        if is_safe_n(&numbers, i) {
             return true;
         }
     }
