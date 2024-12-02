@@ -1,9 +1,9 @@
 advent_of_code::solution!(1);
 
-fn count_occurrances(lsit: &Vec<u32>, value: &u32) -> u32 {
+fn count_occurrances(list: &Vec<u32>, value: &u32) -> u32 {
     let mut count = 0;
-    for n in lsit {
-        if n == value {
+    for value in list {
+        if value == value {
             count += 1;
         }
     }
