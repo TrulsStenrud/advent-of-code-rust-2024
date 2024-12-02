@@ -7,27 +7,17 @@ fn is_safe(line: &str) -> bool {
         .expect("Not enough numbers in line.")
         .parse::<u32>()
         .expect("Failed to parse u32 from string.");
-
-    let second = numbers
-        .next()
-        .expect("Not enough numbers in line.")
-        .parse::<u32>()
-        .expect("Failed to parse u32 from string.");
-
-    let increasing = prev < second;
-    if prev == second || prev.abs_diff(second) > 3 {
-        return false;
-    }
-    prev = second;
+    let mut increasing: Option<bool> = None;
     for next in numbers.map(|it| it.parse::<u32>().expect("Failed to parse u32 from string.")) {
-        // println!("{} {} {}", next, prev, prev == next);
-        if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
-            // println!("{} was false", line);
+        if (prev == next)
+            || ((prev < next) != *increasing.get_or_insert(prev < next))
+            || prev.abs_diff(next) > 3
+        {
             return false;
         }
         prev = next;
     }
-    // println!("{} was true", line);
+
     true
 }
 
@@ -53,14 +43,13 @@ fn is_safe_n(numbers: &Vec<u32>, skip_i: usize) -> bool {
             continue;
         }
         let next = numbers[c];
-        // println!("{} {} {}", next, prev, prev == next);
+
         if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
-            // println!("{} was false", line);
             return false;
         }
         prev = next;
     }
-    // println!("{} was true", line);
+
     true
 }
 fn is_safe_ish(line: &str) -> bool {
@@ -89,10 +78,9 @@ fn is_safe_ish(line: &str) -> bool {
         let next = curr
             .parse::<u32>()
             .expect("Failed to parse u32 from string.");
-        // println!("{} {} {}", next, prev, prev == next);
+
         if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
             if has_false {
-                // println!("{} was false", line);
                 return false;
             }
             has_false = true;
@@ -100,7 +88,7 @@ fn is_safe_ish(line: &str) -> bool {
             prev = next;
         }
     }
-    // println!("{} was true", line);
+
     true
 }
 
@@ -126,14 +114,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(
         input
             .lines()
-            .filter(|line| {
-                let result = is_safe_ish(line);
-                if result {
-                    return result;
-                } else {
-                    return are_you_sure(line);
-                }
-            })
+            .filter(|line| is_safe_ish(line) || are_you_sure(line))
             .count() as u32,
     )
 }
