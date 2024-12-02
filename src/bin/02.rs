@@ -48,8 +48,8 @@ fn is_safe_n(numbers: &Vec<u32>, skip_i: usize) -> bool {
         return false;
     }
     prev = second;
-    for (c, index) in (index..numbers.len()).enumerate() {
-        if index == skip_i {
+    for c in index..numbers.len() {
+        if c == skip_i {
             continue;
         }
         let next = numbers[c];
