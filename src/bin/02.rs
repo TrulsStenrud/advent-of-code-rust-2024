@@ -33,6 +33,29 @@ fn is_safe(line: &str) -> bool {
     // println!("{} was true", line);
     true
 }
+
+fn is_safe_n(numbers: &Vec<u32>) -> bool {
+    let mut prev = numbers[0];
+
+    let second = numbers[1];
+
+    let increasing = prev < second;
+    if prev == second || prev.abs_diff(second) > 3 {
+        return false;
+    }
+    prev = second;
+    for c in 2..numbers.len() {
+        let next = numbers[c];
+        // println!("{} {} {}", next, prev, prev == next);
+        if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
+            // println!("{} was false", line);
+            return false;
+        }
+        prev = next;
+    }
+    // println!("{} was true", line);
+    true
+}
 fn is_safe_ish(line: &str) -> bool {
     let mut numbers = line.split_whitespace();
     let mut prev = numbers
@@ -83,13 +106,7 @@ fn are_you_sure(line: &str) -> bool {
     for i in 0..numbers.len() {
         let mut new_numbers = numbers.clone();
         new_numbers.remove(i);
-        if is_safe(
-            &new_numbers
-                .iter()
-                .map(|n| n.to_string())
-                .collect::<Vec<_>>()
-                .join(" "),
-        ) {
+        if is_safe_n(&new_numbers) {
             return true;
         }
     }
