@@ -21,89 +21,43 @@ fn is_safe(line: &str) -> bool {
     true
 }
 
-fn is_safe_n(numbers: &Vec<u32>, skip_i: usize) -> bool {
-    let mut index = 0;
-    if skip_i == index {
-        index += 1;
+fn is_safe_ish(
+    line: &Vec<u32>,
+    i: usize,
+    skip: Option<usize>,
+    increasing: &mut Option<bool>,
+) -> bool {
+    if i == line.len() {
+        return true;
     }
-    let mut prev = numbers[index];
-    index += 1;
-    if skip_i == index {
-        index += 1;
-    }
-    let second = numbers[index];
-    index += 1;
-    let increasing = prev < second;
-    if prev == second || prev.abs_diff(second) > 3 {
-        return false;
-    }
-    prev = second;
-    for c in index..numbers.len() {
-        if c == skip_i {
-            continue;
-        }
-        let next = numbers[c];
 
-        if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
+    let mut prev = line[i - 1];
+    if let Some(skip) = skip {
+        if skip == i {
+            return is_safe_ish(line, i + 1, Some(skip), increasing);
+        } else if skip == i - 1 {
+            if i == 1 {
+                return is_safe_ish(line, i + 1, Some(skip), increasing);
+            } else {
+                prev = line[i - 2];
+            }
+        }
+    }
+    let curr = line[i];
+
+    if (prev == curr)
+        || ((prev < curr) != *increasing.get_or_insert(prev < curr))
+        || prev.abs_diff(curr) > 3
+    {
+        if skip.is_none() {
+            return is_safe_ish(line, i + 1, Some(i), &mut None)
+                || is_safe_ish(line, i, Some(i - 1), &mut None);
+        } else {
             return false;
         }
-        prev = next;
     }
 
-    true
-}
-fn is_safe_ish(line: &str) -> bool {
-    let mut numbers = line.split_whitespace();
-    let mut prev = numbers
-        .next()
-        .expect("Not enough numbers in line.")
-        .parse::<u32>()
-        .expect("Failed to parse u32 from string.");
-
-    let second = numbers
-        .next()
-        .expect("Not enough numbers in line.")
-        .parse::<u32>()
-        .expect("Failed to parse u32 from string.");
-
-    let mut has_false = false;
-
-    let increasing = prev < second;
-    if prev == second || prev.abs_diff(second) > 3 {
-        has_false = true;
-    } else {
-        prev = second;
-    }
-    for curr in numbers {
-        let next = curr
-            .parse::<u32>()
-            .expect("Failed to parse u32 from string.");
-
-        if (prev == next) || ((prev < next) != increasing) || prev.abs_diff(next) > 3 {
-            if has_false {
-                return false;
-            }
-            has_false = true;
-        } else {
-            prev = next;
-        }
-    }
-
-    true
-}
-
-fn are_you_sure(line: &str) -> bool {
-    let numbers = line
-        .split_whitespace()
-        .map(|n| n.parse::<u32>().expect("Unable to parse u32"))
-        .collect::<Vec<_>>();
-
-    for i in 0..numbers.len() {
-        if is_safe_n(&numbers, i) {
-            return true;
-        }
-    }
-    false
+    return is_safe_ish(line, i + 1, skip, increasing);
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
@@ -114,7 +68,17 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(
         input
             .lines()
-            .filter(|line| is_safe_ish(line) || are_you_sure(line))
+            .filter(|line| {
+                is_safe_ish(
+                    &line
+                        .split_whitespace()
+                        .map(|x| x.parse::<u32>().unwrap())
+                        .collect(),
+                    1,
+                    None,
+                    &mut None,
+                )
+            })
             .count() as u32,
     )
 }
