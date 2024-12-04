@@ -163,11 +163,17 @@ pub fn part_two(input: &str) -> Option<u32> {
             .map(|x| {
                 (0..letters[x].len() - 2)
                     .map(|y| {
-                        let work = matches
-                            .iter()
-                            .filter(|thing| has_x_mas(&letters, x, y, thing));
+                        if letters[x + 1][y + 1] == 'A' {
+                            let work = matches.iter().any(|thing| has_x_mas(&letters, x, y, thing));
 
-                        work.count() as u32
+                            if work {
+                                1
+                            } else {
+                                0
+                            }
+                        } else {
+                            0
+                        }
                     })
                     .sum::<u32>()
             })
