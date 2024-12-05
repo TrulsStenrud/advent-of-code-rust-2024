@@ -1,9 +1,9 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 advent_of_code::solution!(5);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut is_bigger: HashMap<String, HashMap<String, bool>> = HashMap::new();
+    let mut is_bigger: HashMap<u32, HashSet<u32>> = HashMap::new();
 
     let mut is_building_rules = true;
     let mut solution = 0;
@@ -13,25 +13,21 @@ pub fn part_one(input: &str) -> Option<u32> {
             is_building_rules = false;
         } else if is_building_rules {
             let mut split = line.split("|");
-            let left = split.next().unwrap();
-            let right = split.next().unwrap();
+            let left = split.next().unwrap().parse::<u32>().unwrap();
+            let right = split.next().unwrap().parse::<u32>().unwrap();
 
-            if let Some(existing) = is_bigger.get_mut(left) {
-                existing.insert(right.to_string(), false);
+            if let Some(existing) = is_bigger.get_mut(&right) {
+                existing.insert(left);
             } else {
-                let mut new_map = HashMap::new();
-                new_map.insert(right.to_string(), false);
-                is_bigger.insert(left.to_string(), new_map);
-            }
-            if let Some(existing) = is_bigger.get_mut(right) {
-                existing.insert(left.to_string(), true);
-            } else {
-                let mut new_map = HashMap::new();
-                new_map.insert(left.to_string(), true);
-                is_bigger.insert(right.to_string(), new_map);
+                let mut new_map = HashSet::new();
+                new_map.insert(left);
+                is_bigger.insert(right, new_map);
             }
         } else {
-            let original = line.split(",").collect::<Vec<_>>();
+            let original = line
+                .split(",")
+                .map(|x| x.parse::<u32>().unwrap())
+                .collect::<Vec<_>>();
             let mut numbers = original.clone();
             // println!("{:?}", original);
             numbers.sort_by(|x, y| {
@@ -41,7 +37,8 @@ pub fn part_one(input: &str) -> Option<u32> {
                 //     y,
                 //     is_bigger[&x.to_string()][&y.to_string()]
                 // );
-                if is_bigger[&x.to_string()][&y.to_string()] {
+
+                if is_bigger[x].contains(y) {
                     std::cmp::Ordering::Greater
                 } else {
                     std::cmp::Ordering::Less
@@ -50,8 +47,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             // println!("{:?}", original);
             // println!("{:?}", numbers);
             if numbers.iter().zip(original).all(|(a, b)| *a == b) {
-                // println!("Was same");
-                solution += numbers[numbers.len() / 2].parse::<u32>().unwrap();
+                solution += numbers[numbers.len() / 2];
             }
         }
     }
@@ -59,7 +55,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let mut is_bigger: HashMap<String, HashMap<String, bool>> = HashMap::new();
+    let mut is_bigger: HashMap<u32, HashSet<u32>> = HashMap::new();
 
     let mut is_building_rules = true;
     let mut solution = 0;
@@ -69,25 +65,21 @@ pub fn part_two(input: &str) -> Option<u32> {
             is_building_rules = false;
         } else if is_building_rules {
             let mut split = line.split("|");
-            let left = split.next().unwrap();
-            let right = split.next().unwrap();
+            let left = split.next().unwrap().parse::<u32>().unwrap();
+            let right = split.next().unwrap().parse::<u32>().unwrap();
 
-            if let Some(existing) = is_bigger.get_mut(left) {
-                existing.insert(right.to_string(), false);
+            if let Some(existing) = is_bigger.get_mut(&right) {
+                existing.insert(left);
             } else {
-                let mut new_map = HashMap::new();
-                new_map.insert(right.to_string(), false);
-                is_bigger.insert(left.to_string(), new_map);
-            }
-            if let Some(existing) = is_bigger.get_mut(right) {
-                existing.insert(left.to_string(), true);
-            } else {
-                let mut new_map = HashMap::new();
-                new_map.insert(left.to_string(), true);
-                is_bigger.insert(right.to_string(), new_map);
+                let mut new_map = HashSet::new();
+                new_map.insert(left);
+                is_bigger.insert(right, new_map);
             }
         } else {
-            let original = line.split(",").collect::<Vec<_>>();
+            let original = line
+                .split(",")
+                .map(|x| x.parse::<u32>().unwrap())
+                .collect::<Vec<_>>();
             let mut numbers = original.clone();
             // println!("{:?}", original);
             numbers.sort_by(|x, y| {
@@ -97,7 +89,8 @@ pub fn part_two(input: &str) -> Option<u32> {
                 //     y,
                 //     is_bigger[&x.to_string()][&y.to_string()]
                 // );
-                if is_bigger[&x.to_string()][&y.to_string()] {
+
+                if is_bigger[x].contains(y) {
                     std::cmp::Ordering::Greater
                 } else {
                     std::cmp::Ordering::Less
@@ -106,7 +99,7 @@ pub fn part_two(input: &str) -> Option<u32> {
             // println!("{:?}", original);
             // println!("{:?}", numbers);
             if !numbers.iter().zip(original).all(|(a, b)| *a == b) {
-                solution += numbers[numbers.len() / 2].parse::<u32>().unwrap();
+                solution += numbers[numbers.len() / 2];
             }
         }
     }
