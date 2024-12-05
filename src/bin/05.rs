@@ -23,13 +23,13 @@ fn do_today(input: &str, correct_ones: bool) -> u32 {
                 is_bigger.insert(right, new_map);
             }
         } else {
-            let mut original = line
+            let mut numbers = line
                 .split(",")
                 .map(|x| x.parse::<u32>().unwrap())
                 .collect::<Vec<_>>();
 
             let mut is_correct = true;
-            original.sort_by(|x, y| {
+            numbers.sort_by(|x, y| {
                 if is_bigger[x].contains(y) {
                     std::cmp::Ordering::Greater
                 } else {
@@ -39,8 +39,7 @@ fn do_today(input: &str, correct_ones: bool) -> u32 {
             });
 
             if is_correct == correct_ones {
-                // println!("{}", is_correct);
-                solution += original[original.len() / 2];
+                solution += numbers[numbers.len() / 2];
             }
         }
     }
