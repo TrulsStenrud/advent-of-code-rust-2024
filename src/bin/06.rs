@@ -130,7 +130,7 @@ fn causes_loop(
     }
     let mut direction = direction;
     let mut pos = pos;
-    let mut walked_locations = HashSet::new();
+    let mut walked_locations = HashSet::with_capacity((max_x * max_y) as usize);
     let mut next = (pos.0 + direction.0, pos.1 + direction.1);
     while pos.0 > 0 && pos.0 <= max_x && pos.1 > 0 && pos.1 <= max_y {
         if walked_locations.contains(&(pos, direction)) {
