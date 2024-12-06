@@ -100,7 +100,9 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut next = (pos.0 + direction.0, pos.1 + direction.1);
     let mut sum = 0;
     while pos.0 > 0 && pos.0 <= max_x && pos.1 > 0 && pos.1 <= max_y {
-        if causes_loop(&trees, pos, direction, next, max_x, max_y) {
+        if !walked_locations.contains(&next)
+            && causes_loop(&trees, pos, direction, next, max_x, max_y)
+        {
             sum += 1;
         }
         walked_locations.insert(pos);
