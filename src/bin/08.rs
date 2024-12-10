@@ -126,16 +126,16 @@ pub fn part_two(input: &str) -> Option<u32> {
         }
     }
 
-    for (x, line) in input.lines().enumerate() {
-        for (y, char) in line.chars().enumerate() {
-            if antinodes.contains(&(x as isize, y as isize)) {
-                print!("#")
-            } else {
-                print!("{}", char)
-            }
-        }
-        println!();
-    }
+    // for (x, line) in input.lines().enumerate() {
+    //     for (y, char) in line.chars().enumerate() {
+    //         if antinodes.contains(&(x as isize, y as isize)) {
+    //             print!("#")
+    //         } else {
+    //             print!("{}", char)
+    //         }
+    //     }
+    //     println!();
+    // }
     let antinode_count = antinodes.iter().count() as u32;
     let antenna_count = chars_pos
         .iter()
