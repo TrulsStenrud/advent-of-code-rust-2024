@@ -21,7 +21,7 @@ fn helper(n: u64, index: usize, numbers: &Vec<u64>, cut_off: u64, use_merge: boo
         || helper(n * numbers[index], index + 1, numbers, cut_off, use_merge)
         || (use_merge
             && helper(
-                format!("{}{}", n, numbers[index]).parse().unwrap(),
+                n * i64::from(10).pow(numbers[index].ilog(10) + 1) as u64 + numbers[index],
                 index + 1,
                 numbers,
                 cut_off,
