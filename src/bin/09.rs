@@ -1,20 +1,5 @@
 advent_of_code::solution!(9);
 
-fn print_chars(chars: &Vec<i64>) {
-    println!();
-    for c in chars.iter() {
-        print!(
-            "{}",
-            if c == &-1 {
-                ".".to_string()
-            } else {
-                c.to_string()
-            }
-        );
-    }
-    println!();
-}
-
 pub fn part_one(input: &str) -> Option<i64> {
     let mut file_id = 0;
     let mut chars = Vec::with_capacity(input.len() * 10);

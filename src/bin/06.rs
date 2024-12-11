@@ -1,4 +1,4 @@
-use std::{cmp::max, collections::HashSet};
+use std::collections::HashSet;
 
 advent_of_code::solution!(6);
 
@@ -152,13 +152,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_one1() {
+    fn test_part_one_day_6() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(41));
     }
 
     #[test]
-    fn test_part_two9() {
+    fn test_part_two_day_6() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(6));
     }

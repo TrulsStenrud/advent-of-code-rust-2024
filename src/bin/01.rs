@@ -64,13 +64,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_one() {
+    fn test_part_one_day_1() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(11));
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_part_two_day_1() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(31));
     }
