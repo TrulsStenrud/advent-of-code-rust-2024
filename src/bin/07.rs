@@ -31,7 +31,7 @@ fn helper(n: u64, numbers: Vec<u64>, results: &mut Vec<u64>) {
     let mut numbers = numbers.clone();
     let next = numbers.pop().unwrap();
 
-    println!("{} {}", n, next);
+    // println!("{} {}", n, next);
     helper(n + next, numbers.clone(), results);
     helper(n * next, numbers.clone(), results);
     helper(
@@ -43,7 +43,7 @@ fn helper(n: u64, numbers: Vec<u64>, results: &mut Vec<u64>) {
 
 fn is_valid_2(result: &u64, numbers: &mut Vec<u64>) -> bool {
     let mut numbers = numbers.iter().rev().map(|x| *x).collect::<Vec<u64>>();
-    println!("{:?}", numbers);
+    // println!("{:?}", numbers);
     let first = numbers.pop().unwrap();
 
     let mut results = Vec::new();
@@ -51,10 +51,10 @@ fn is_valid_2(result: &u64, numbers: &mut Vec<u64>) -> bool {
     helper(first, numbers, &mut results);
 
     if results.contains(result) {
-        println!("    yes");
+        // println!("    yes");
         return true;
     }
-    println!("    no");
+    // println!("    no");
     return false;
 }
 
