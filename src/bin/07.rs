@@ -31,23 +31,24 @@ fn helper(n: u64, numbers: Vec<u64>, results: &mut Vec<u64>) {
     let mut numbers = numbers.clone();
     let next = numbers.pop().unwrap();
 
+    println!("{} {}", n, next);
     helper(n + next, numbers.clone(), results);
     helper(n * next, numbers.clone(), results);
-
     helper(
-        (format!("{}{}", n, next)).parse().unwrap(),
+        format!("{}{}", n, next).parse().unwrap(),
         numbers.clone(),
         results,
     );
 }
 
 fn is_valid_2(result: &u64, numbers: &mut Vec<u64>) -> bool {
-    print!("{:?}", numbers);
+    let mut numbers = numbers.iter().rev().map(|x| *x).collect::<Vec<u64>>();
+    println!("{:?}", numbers);
     let first = numbers.pop().unwrap();
 
     let mut results = Vec::new();
 
-    helper(first, numbers.clone(), &mut results);
+    helper(first, numbers, &mut results);
 
     if results.contains(result) {
         println!("    yes");
@@ -79,7 +80,6 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    return None;
     let mut sum = 0;
     input.lines().for_each(|line| {
         let mut words = line.split(':');
