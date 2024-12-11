@@ -30,7 +30,7 @@ fn do_today(input: &str, correct_ones: bool) -> u32 {
 
             let mut is_correct = true;
             numbers.sort_by(|x, y| {
-                if is_bigger[x].contains(y) {
+                if is_bigger.contains_key(&x) && is_bigger[x].contains(y) {
                     std::cmp::Ordering::Greater
                 } else {
                     is_correct = false;
