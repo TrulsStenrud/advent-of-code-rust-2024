@@ -9,6 +9,13 @@ pub fn part_two(input: &str) -> Option<u64> {
     solve(input, 75)
 }
 
+fn split_number(n: u64) -> (u64, u64) {
+    let x = 10u64.pow((n.checked_ilog10().unwrap() + 1) / 2);
+    let second = n % x;
+    let first = (n - second) / x;
+    (first, second)
+}
+
 fn add_count(hash_map: &mut HashMap<u64, u64>, n: u64, count: u64) {
     if hash_map.contains_key(&n) {
         hash_map.insert(n, hash_map.get(&n).unwrap() + count);
@@ -36,10 +43,9 @@ fn solve(input: &str, iterations: u64) -> Option<u64> {
                 if stone == &0 {
                     add_count(&mut hash_map, 1, *count);
                 } else if (stone.checked_ilog10().unwrap() + 1) % 2 == 0 {
-                    let stone_str = stone.to_string();
-                    let (first, second) = stone_str.split_at(stone_str.len() / 2);
-                    add_count(&mut hash_map, first.parse::<u64>().unwrap(), *count);
-                    add_count(&mut hash_map, second.parse::<u64>().unwrap(), *count);
+                    let (first, second) = split_number(*stone);
+                    add_count(&mut hash_map, first, *count);
+                    add_count(&mut hash_map, second, *count);
                 } else {
                     add_count(&mut hash_map, stone * 2024, *count);
                 }
